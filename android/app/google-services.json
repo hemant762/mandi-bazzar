@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "500951654704",
+    "firebase_url": "https://mandibazzar-6fc99.firebaseio.com",
+    "project_id": "mandibazzar-6fc99",
+    "storage_bucket": "mandibazzar-6fc99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500951654704:android:fddfe6ec8d19d5fc43a8f5",
+        "android_client_info": {
+          "package_name": "com.example.responsive_flutter_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "500951654704-9tiae097mljvgt47nlc4h00o4sv3eds0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.responsive_flutter_ui",
+            "certificate_hash": "173ef1be683400ea382c1dd60aa6499afcec6d68"
+          }
+        },
+        {
+          "client_id": "500951654704-bt8b7sp1ltvg9btslsrpe1ak3lho2fp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG0I2y_ruwmnY9kf5Ajma5GlrFOtVm_pk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500951654704-bt8b7sp1ltvg9btslsrpe1ak3lho2fp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
