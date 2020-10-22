@@ -13,6 +13,7 @@ const getSuperTopProductPost = "get_super_top_products";
 const loginUserPost = "login_user_post";
 const isNumberRegisterPost = "is_number_register_post";
 const registerUserPost = "register_user_post";
+const forgetPasswordPost = "forget_password_post";
 
 
 const loginUser = "login_user";

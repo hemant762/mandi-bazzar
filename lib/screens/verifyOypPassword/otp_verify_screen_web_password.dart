@@ -10,27 +10,25 @@ import 'package:responsive_flutter_ui/Dialog/dialog_helpers.dart';
 import 'package:responsive_flutter_ui/Encryption/enc.dart';
 import 'package:responsive_flutter_ui/components/rounded_button.dart';
 import 'package:responsive_flutter_ui/components/rounded_input_field.dart';
+import 'package:responsive_flutter_ui/screens/login/login_screen.dart';
 import 'package:responsive_flutter_ui/services/http_post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:websafe_svg/websafe_svg.dart';
 
 import '../../constants.dart';
 import '../home/home_screen.dart';
 
-class OtpVerify extends StatefulWidget {
+class OtpVerifyWebPassword extends StatefulWidget {
 
 
-  final FirebaseAuth firebaseAuth;
-  final String verificationId;
-  final int resendToken;
+  final ConfirmationResult confirmationResult;
   final String phone_number;
   final String password;
 
 
-  const OtpVerify({
+  const OtpVerifyWebPassword({
     Key key,
-    this.firebaseAuth,
-    this.verificationId,
-    this.resendToken,
+    this.confirmationResult,
     this.phone_number,
     this.password,
   }) : super(key: key);
@@ -40,16 +38,14 @@ class OtpVerify extends StatefulWidget {
   _OtpVerifyState createState() => _OtpVerifyState();
 }
 
-class _OtpVerifyState extends State<OtpVerify> {
+class _OtpVerifyState extends State<OtpVerifyWebPassword> {
 
   final _otpController = TextEditingController();
-  final FirebaseMessaging _fcm = FirebaseMessaging();
 
 
   Future<bool> postuserData(phone_number,password) async{
     try{
-      String fcmToken = await _fcm.getToken() ?? "none";
-      HttpPost httpPost = HttpPost(context: context,type: registerUserPost,voids: [phone_number,password,fcmToken]);
+      HttpPost httpPost = HttpPost(context: context,type: forgetPasswordPost,voids: [phone_number,password]);
       Response response = await httpPost.postNow();
       Map<dynamic,dynamic> data = jsonDecode(decrypt(response.body));
       if(data["error"]){
@@ -69,12 +65,20 @@ class _OtpVerifyState extends State<OtpVerify> {
             reverseCurve: Curves.fastOutSlowIn);
         return false;
       }else{
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        Map<dynamic,dynamic> row = jsonDecode(data["data"]);
-        prefs.setBool(isUserLogin, true);
-        prefs.setString(userId,row["id"]);
-        prefs.setString(userPhone,row["user_phone"]);
-        prefs.setString(userPassword,row["user_password"]);
+        showToast(data['message'],
+            context: context,
+            animation: StyledToastAnimation.slideFromBottom,
+            reverseAnimation: StyledToastAnimation.slideToBottom,
+            startOffset: Offset(0.0, 3.0),
+            reverseEndOffset: Offset(0.0, 3.0),
+            position: StyledToastPosition.bottom,
+            duration: Duration(seconds: 4),
+            //Animation duration   animDuration * 2 <= duration
+            animDuration: Duration(seconds: 1),
+            curve: Curves.elasticOut,
+            backgroundColor: Colors.green,
+            textStyle: TextStyle(color: Colors.white),
+            reverseCurve: Curves.fastOutSlowIn);
         return true;
       }
     }catch(e){
@@ -98,10 +102,10 @@ class _OtpVerifyState extends State<OtpVerify> {
   }
 
   Future<void> signUpUser() async{
-    final code = _otpController.text.trim();
+    String code = _otpController.text.toString().trim();
     try{
-      AuthCredential credential = PhoneAuthProvider.getCredential(verificationId: widget.verificationId, smsCode: code);
-      UserCredential result = await widget.firebaseAuth.signInWithCredential(credential);
+
+      UserCredential result = await widget.confirmationResult.confirm(code);
 
       if( result.user != null){
 
@@ -126,7 +130,7 @@ class _OtpVerifyState extends State<OtpVerify> {
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(
                 builder: (context) {
-                  return HomeScreen();
+                  return LoginScreen();
                 },
               ),
                   (route) => false
@@ -135,7 +139,7 @@ class _OtpVerifyState extends State<OtpVerify> {
           Navigator.of(context).pop();
         }
       }else{
-        showToast("Something Is Wrong",
+        showToast("Invalid Otp",
             context: context,
             animation: StyledToastAnimation.slideFromBottom,
             reverseAnimation: StyledToastAnimation.slideToBottom,
@@ -153,7 +157,7 @@ class _OtpVerifyState extends State<OtpVerify> {
       }
     }catch(e){
       print("Error : $e");
-      showToast("Invalid Otp",
+      showToast("Something Is Wrong",
           context: context,
           animation: StyledToastAnimation.slideFromBottom,
           reverseAnimation: StyledToastAnimation.slideToBottom,
@@ -186,17 +190,17 @@ class _OtpVerifyState extends State<OtpVerify> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 100),
+              SizedBox(height: 100,),
               Text(
                 "Enter Otp",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: size.height * 0.03),
-              SvgPicture.asset(
+              SizedBox(height: size.height * 0.05),
+              WebsafeSvg.asset(
                 "assets/icons/shop_icon3.svg",
                 height: size.height * 0.35,
               ),
-              SizedBox(height: size.height * 0.03),
+              SizedBox(height: size.height * 0.05),
 
               Padding(
                 padding: EdgeInsets.fromLTRB(50,0,50,0),
@@ -218,7 +222,7 @@ class _OtpVerifyState extends State<OtpVerify> {
               ),
 
               RoundedButton(
-                text: "Signup",
+                text: "Set New Password",
                 press: () {
                   if(_otpController.text.toString().trim().length != 6){
                     showToast("Enter 6 Digit Otp",
@@ -247,5 +251,4 @@ class _OtpVerifyState extends State<OtpVerify> {
       ),
     );
   }
-
 }

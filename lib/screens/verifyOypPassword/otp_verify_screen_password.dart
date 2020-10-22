@@ -10,13 +10,14 @@ import 'package:responsive_flutter_ui/Dialog/dialog_helpers.dart';
 import 'package:responsive_flutter_ui/Encryption/enc.dart';
 import 'package:responsive_flutter_ui/components/rounded_button.dart';
 import 'package:responsive_flutter_ui/components/rounded_input_field.dart';
+import 'package:responsive_flutter_ui/screens/login/login_screen.dart';
 import 'package:responsive_flutter_ui/services/http_post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants.dart';
 import '../home/home_screen.dart';
 
-class OtpVerify extends StatefulWidget {
+class OtpVerifyPassword extends StatefulWidget {
 
 
   final FirebaseAuth firebaseAuth;
@@ -26,7 +27,7 @@ class OtpVerify extends StatefulWidget {
   final String password;
 
 
-  const OtpVerify({
+  const OtpVerifyPassword({
     Key key,
     this.firebaseAuth,
     this.verificationId,
@@ -40,16 +41,14 @@ class OtpVerify extends StatefulWidget {
   _OtpVerifyState createState() => _OtpVerifyState();
 }
 
-class _OtpVerifyState extends State<OtpVerify> {
+class _OtpVerifyState extends State<OtpVerifyPassword> {
 
   final _otpController = TextEditingController();
-  final FirebaseMessaging _fcm = FirebaseMessaging();
 
 
   Future<bool> postuserData(phone_number,password) async{
     try{
-      String fcmToken = await _fcm.getToken() ?? "none";
-      HttpPost httpPost = HttpPost(context: context,type: registerUserPost,voids: [phone_number,password,fcmToken]);
+      HttpPost httpPost = HttpPost(context: context,type: forgetPasswordPost,voids: [phone_number,password]);
       Response response = await httpPost.postNow();
       Map<dynamic,dynamic> data = jsonDecode(decrypt(response.body));
       if(data["error"]){
@@ -69,12 +68,20 @@ class _OtpVerifyState extends State<OtpVerify> {
             reverseCurve: Curves.fastOutSlowIn);
         return false;
       }else{
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        Map<dynamic,dynamic> row = jsonDecode(data["data"]);
-        prefs.setBool(isUserLogin, true);
-        prefs.setString(userId,row["id"]);
-        prefs.setString(userPhone,row["user_phone"]);
-        prefs.setString(userPassword,row["user_password"]);
+        showToast(data['message'],
+            context: context,
+            animation: StyledToastAnimation.slideFromBottom,
+            reverseAnimation: StyledToastAnimation.slideToBottom,
+            startOffset: Offset(0.0, 3.0),
+            reverseEndOffset: Offset(0.0, 3.0),
+            position: StyledToastPosition.bottom,
+            duration: Duration(seconds: 4),
+            //Animation duration   animDuration * 2 <= duration
+            animDuration: Duration(seconds: 1),
+            curve: Curves.elasticOut,
+            backgroundColor: Colors.green,
+            textStyle: TextStyle(color: Colors.white),
+            reverseCurve: Curves.fastOutSlowIn);
         return true;
       }
     }catch(e){
@@ -126,7 +133,7 @@ class _OtpVerifyState extends State<OtpVerify> {
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(
                 builder: (context) {
-                  return HomeScreen();
+                  return LoginScreen();
                 },
               ),
                   (route) => false
@@ -218,7 +225,7 @@ class _OtpVerifyState extends State<OtpVerify> {
               ),
 
               RoundedButton(
-                text: "Signup",
+                text: "Set New Password",
                 press: () {
                   if(_otpController.text.toString().trim().length != 6){
                     showToast("Enter 6 Digit Otp",

@@ -24,7 +24,7 @@ class HttpPost{
       body: getBody(type),
       encoding: Encoding.getByName("utf-8"),
     );
-    print(decrypt(response.body));
+    //print(decrypt(response.body));
     return response;
   }
 
@@ -56,6 +56,13 @@ class HttpPost{
         };
         break;
       case loginUserPost:
+        return <String, String>{
+          type : encrypt(access_key),
+          userPhone : encrypt(voids[0]),
+          userPassword : encrypt(voids[1]),
+        };
+        break;
+      case forgetPasswordPost:
         return <String, String>{
           type : encrypt(access_key),
           userPhone : encrypt(voids[0]),
