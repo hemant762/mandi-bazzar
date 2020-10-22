@@ -11,6 +11,7 @@ import 'package:responsive_flutter_ui/components/already_have_an_account_acheck.
 import 'package:responsive_flutter_ui/components/rounded_button.dart';
 import 'package:responsive_flutter_ui/components/rounded_input_field.dart';
 import 'package:responsive_flutter_ui/components/rounded_password_field.dart';
+import 'package:responsive_flutter_ui/screens/forgot_password/forgot_password.dart';
 import 'package:responsive_flutter_ui/screens/home/home_screen.dart';
 import 'package:responsive_flutter_ui/screens/signup/signup_screen.dart';
 import 'package:responsive_flutter_ui/services/http_post.dart';
@@ -201,6 +202,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   );
                 },
+              ),
+              SizedBox(height: 8),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ForgotPassword();
+                      },
+                    ),
+                  );
+                },
+                  child: Text("Forgot your password ?",style: TextStyle(color: kPrimaryColor,fontWeight: FontWeight.w600),)
               ),
               SizedBox(height: 20,),
             ],

@@ -7,11 +7,13 @@ import '../constants.dart';
 class RoundedPasswordField extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final TextEditingController controller;
+  final String hint_text;
 
   const RoundedPasswordField({
     Key key,
     this.onChanged,
     this.controller,
+    this.hint_text="Password"
   }) : super(key: key);
 
 
@@ -32,7 +34,7 @@ class _RoundedPasswordFieldState extends State<RoundedPasswordField> {
         cursorColor: kPrimaryColor,
         controller: widget.controller,
         decoration: InputDecoration(
-          hintText: "Password",
+          hintText: widget.hint_text,
           icon: Icon(
             Icons.lock,
             color: kPrimaryColor,
