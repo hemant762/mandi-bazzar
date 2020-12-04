@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:responsive_flutter_ui/components/custome_search.dart';
+import 'package:responsive_flutter_ui/screens/Profile/profile_screen.dart';
+import 'package:responsive_flutter_ui/screens/cart/cart.dart';
 import 'package:responsive_flutter_ui/screens/home/components/body.dart';
+import 'package:responsive_flutter_ui/screens/myorders/my_orders.dart';
 import 'package:responsive_flutter_ui/screens/wellcome/wellcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 
+import '../../constants.dart';
 import '../../size_config.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,9 +23,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   GlobalKey<SliderMenuContainerState> _key =
   new GlobalKey<SliderMenuContainerState>();
   String menu = "assets/icons/menu.svg";
+  String user_phone = "Loading...";
 
   Future<void> logout() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -51,20 +58,49 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void menuClickListner(id){
     _key.currentState.closeDrawer();
+    setState(() {
+      menu = "assets/icons/menu.svg";
+    });
     switch(id){
       case 4:
         logout();
+        break;
+      case 3:
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>MyProfile()));
+        break;
+      case 2:
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>MyOrders()));
+        break;
+      case 1:
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart()));
+        break;
     }
+  }
+
+  Future<void> init() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    user_phone = preferences.getString(userPhone) ?? "Loading...";
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    init();
   }
 
   @override
   Widget build(BuildContext context) {
     // It help us to  make our UI responsive
     SizeConfig().init(context);
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
 //      appBar: buildAppBar(),
-        body: SliderMenuContainer(
+    backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SliderMenuContainer(
           appBarColor: Colors.white,
           key: _key,
           sliderOpen: SliderOpen.LEFT_TO_RIGHT,
@@ -83,7 +119,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   "assets/icons/search.svg",
                   height: SizeConfig.defaultSize * 2.4, //24
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: CustomSearch(),
+                  );
+                },
               ),
               IconButton(
                 icon: kIsWeb ?
@@ -95,7 +136,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   "assets/icons/bag.svg",
                   height: SizeConfig.defaultSize * 2.4, //24
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Cart(),
+                  ));
+                },
               ),
             ],
           ),
@@ -125,68 +170,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           sliderMenu: MenuWidget(
             onItemClick: menuClickListner,
+            user_phone: user_phone,
 
           ),
           sliderMain: Body(),
-      ),
+        ),
       ),
     );
   }
 
-  AppBar buildAppBar() {
-    return AppBar(
-      leading: Padding(
-        padding: EdgeInsets.only(left: 8.0),
-        child: IconButton(
-          icon: kIsWeb ?
-          WebsafeSvg.asset(
-            "assets/icons/menu.svg",
-            height: SizeConfig.defaultSize * 2.4, //24
-          ) :
-          SvgPicture.asset(
-            "assets/icons/menu.svg",
-            height: SizeConfig.defaultSize * 2, //20
-          ),
-          onPressed: () {},
-        ),
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: kIsWeb ?
-          WebsafeSvg.asset(
-            "assets/icons/search.svg",
-            height: SizeConfig.defaultSize * 2.4, //24
-          ) :
-          SvgPicture.asset(
-            "assets/icons/search.svg",
-            height: SizeConfig.defaultSize * 2.4, //24
-          ),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: kIsWeb ?
-          WebsafeSvg.asset(
-            "assets/icons/cart.svg",
-            height: SizeConfig.defaultSize * 2.4, //24
-          ) :
-          SvgPicture.asset(
-            "assets/icons/cart.svg",
-            height: SizeConfig.defaultSize * 2.4, //24
-          ),
-          onPressed: () {},
-        ),
-
-        SizedBox(width: SizeConfig.defaultSize),
-      ],
-    );
-  }
 }
 
 
 class MenuWidget extends StatelessWidget {
   final Function(int) onItemClick;
+  final String user_phone;
 
-  const MenuWidget({Key key, this.onItemClick}) : super(key: key);
+  const MenuWidget({Key key, this.onItemClick, this.user_phone}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +209,7 @@ class MenuWidget extends StatelessWidget {
               height: 20,
             ),
             Text(
-              '+91 7415251523',
+              '+91 $user_phone',
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -217,7 +217,7 @@ class MenuWidget extends StatelessWidget {
                   fontFamily: 'BalsamiqSans'),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Divider(),
             sliderItem(0,'Home', "assets/icons/home.svg"),
@@ -246,31 +246,34 @@ class MenuWidget extends StatelessWidget {
         onTap: (){
           onItemClick(id);
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 30,),
-            kIsWeb ?
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: WebsafeSvg.asset(
+        child: Container(
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 30,),
+              kIsWeb ?
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: WebsafeSvg.asset(
+                  icon,
+                  height: SizeConfig.defaultSize * 2.5,
+                ),
+              ) :
+              SvgPicture.asset(
                 icon,
-                height: SizeConfig.defaultSize * 2.5,
+                height: SizeConfig.defaultSize * 2.5, //20
               ),
-            ) :
-            SvgPicture.asset(
-              icon,
-              height: SizeConfig.defaultSize * 2.5, //20
-            ),
-            SizedBox(width: 20,),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-              child: Text(title,style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600
-              ),),
-            )
-          ],
+              SizedBox(width: 20,),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                child: Text(title,style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600
+                ),),
+              ),
+            ],
+          ),
         ),
       );
 }

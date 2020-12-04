@@ -60,6 +60,11 @@ class _LoginScreenState extends State<LoginScreen> {
         prefs.setString(userId,row["id"]);
         prefs.setString(userPhone,row["user_phone"]);
         prefs.setString(userPassword,row["user_password"]);
+        prefs.setString(userContactAddress,row["user_address"]);
+        prefs.setString(userContactNo,row["user_contact"]);
+
+        prefs.remove(cartProductCache);
+        await prefs.setStringList(cartProductCache,data["cart_products"].cast<String>() );
 
         showToast(data['message'],
             context: context,
@@ -118,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

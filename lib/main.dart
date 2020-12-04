@@ -11,12 +11,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application. mandi bazaar
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mandi Bazaar',
       theme: ThemeData(
         textTheme:
         GoogleFonts.dmSansTextTheme().apply(displayColor: kTextColor),
+        canvasColor: Colors.transparent,
         appBarTheme: AppBarTheme(
           color: Colors.transparent,
           elevation: 0,
@@ -24,6 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primarySwatch: Colors.blue,
+        accentColor: kPrimaryColor
       ),
       home: WellcomeScreen(),
     );

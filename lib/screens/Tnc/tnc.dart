@@ -9,6 +9,7 @@ class TNC extends StatelessWidget {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text("Terms & Condition",style: TextStyle(color: Colors.black),),
           leading: IconButton(

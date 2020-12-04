@@ -44,6 +44,12 @@ class _WellcomeScreenState extends State<WellcomeScreen> {
           prefs.setString(userId,row["id"]);
           prefs.setString(userPhone,row["user_phone"]);
           prefs.setString(userPassword,row["user_password"]);
+          prefs.setString(userContactAddress,row["user_address"]);
+          prefs.setString(userContactNo,row["user_contact"]);
+
+          prefs.remove(cartProductCache);
+          await prefs.setStringList(cartProductCache,data["cart_products"].cast<String>() );
+
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(
                 builder: (context) {
@@ -74,6 +80,7 @@ class _WellcomeScreenState extends State<WellcomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: FutureBuilder(
         future: _future ,
         builder:(context, snapshot) {

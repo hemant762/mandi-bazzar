@@ -185,6 +185,7 @@ class _OtpVerifyState extends State<OtpVerifyWebPassword> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

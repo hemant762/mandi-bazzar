@@ -255,6 +255,7 @@ class _SignupScreenState extends State<SignupScreen> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

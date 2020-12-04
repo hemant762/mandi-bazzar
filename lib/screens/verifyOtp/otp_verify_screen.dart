@@ -181,6 +181,7 @@ class _OtpVerifyState extends State<OtpVerify> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

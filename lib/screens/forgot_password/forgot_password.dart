@@ -257,6 +257,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
