@@ -97,7 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // It help us to  make our UI responsive
     SizeConfig().init(context);
     return Scaffold(
-//      appBar: buildAppBar(),
     backgroundColor: Colors.white,
       body: SafeArea(
         child: SliderMenuContainer(

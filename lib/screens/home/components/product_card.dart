@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_flutter_ui/components/title_text.dart';
 import 'package:responsive_flutter_ui/models/Product.dart';
@@ -36,9 +37,10 @@ class ProductCard extends StatelessWidget {
                   tag: product.id,
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: FadeInImage.assetNetwork(
-                      placeholder: "assets/spinner.gif",
-                      image: product.img,
+                    child: FadeInImage(
+                      placeholder: AssetImage("assets/spinner.gif"),
+                      image: CachedNetworkImageProvider(product.img),
+
                     ),
                   ),
                 ),

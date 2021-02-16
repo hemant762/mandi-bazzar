@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -703,9 +704,9 @@ class _ProductTileState extends State<ProductTile> {
                       child: ClipRRect(
                         child: Hero(
                           tag: widget.data.id,
-                          child: FadeInImage.assetNetwork(
-                            placeholder: "assets/spinner.gif",
-                            image: widget.data.img,
+                          child: FadeInImage(
+                            placeholder: AssetImage("assets/spinner.gif"),
+                            image: CachedNetworkImageProvider(widget.data.img),
                             width: 110,
                             height: 110,
                           ),

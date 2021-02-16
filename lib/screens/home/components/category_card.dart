@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_flutter_ui/components/title_text.dart';
 import 'package:responsive_flutter_ui/models/Product.dart';
@@ -70,9 +71,9 @@ class CategoryCard extends StatelessWidget {
                     aspectRatio: 1.15,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: FadeInImage.assetNetwork(
-                        placeholder: "assets/spinner.gif",
-                        image: category.img,
+                      child: FadeInImage(
+                        placeholder: AssetImage("assets/spinner.gif"),
+                        image: CachedNetworkImageProvider(category.img),
                       ),
                     ),
                   ),

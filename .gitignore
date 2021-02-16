@@ -44,3 +44,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+# keys and files
+/lib/constants.dart
+/lib/services
+/lib/Encryption
+/android/app/google-services.json
+/android/app/proguard-rules.pro

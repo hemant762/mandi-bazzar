@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_flutter_ui/models/Product.dart';
 
@@ -37,11 +38,12 @@ class _BodyState extends State<Body> {
                     children: [
                       Hero(
                         tag: widget.product.id,
-                        child: Image.network(
-                          widget.product.img,
+                        child : CachedNetworkImage(
+                          placeholder: (context, url) => Image.asset("assets/spinner.gif"),
+                          imageUrl: widget.product.img,
                           height: defaultSize * 25.8, //378
                           width: defaultSize * 25.4,
-                        ),
+                        )
                       ),
                     ],
                   ),
